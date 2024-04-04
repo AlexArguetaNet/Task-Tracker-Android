@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="Account Settings"
+        android:id="@+id/navAccountSettings"
+        android:icon="@drawable/icon_account_circle"
+        />
+
+    <item
+        android:title="Logout"
+        android:id="@+id/navLogout"
+        android:icon="@drawable/icon_logout"
+        />
+
+</menu>

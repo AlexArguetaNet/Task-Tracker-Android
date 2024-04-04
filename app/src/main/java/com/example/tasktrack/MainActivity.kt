@@ -2,6 +2,7 @@ package com.example.tasktrack
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
@@ -38,9 +39,15 @@ class MainActivity : AppCompatActivity(), LoginFragment.ILogin, SignUpFragment.I
         db = Firebase.firestore;
 
 
-        supportFragmentManager.beginTransaction()
-            .add(binding.fragmentContainerViewMain.id, LoginFragment())
-            .commit();
+        // Check if the user is still logged in
+        if (mAuth.currentUser != null) {
+            goToHome(mAuth.currentUser!!.uid);
+        } else {
+            supportFragmentManager.beginTransaction()
+                .add(binding.fragmentContainerViewMain.id, LoginFragment())
+                .commit();
+        }
+
 
 
     }
@@ -114,7 +121,12 @@ class MainActivity : AppCompatActivity(), LoginFragment.ILogin, SignUpFragment.I
                  // Convert document snap shot into user object
                  val user = docSnapShot.toObject(User::class.java);
 
-                 Log.d(TAG, "goToHome: $user");
+                 // Create and launch Intent
+                 val mIntent = Intent(this, HomeActivity::class.java);
+                 mIntent.putExtra("USER", user);
+
+                 startActivity(mIntent);
+                 finish();
 
              }
              .addOnFailureListener {  }
