@@ -45,10 +45,6 @@ class MainActivity : AppCompatActivity(), LoginFragment.ILogin, SignUpFragment.I
 
     }
 
-    override fun login(email: String, password: String) {
-
-    }
-
     override fun goToSignup() {
         supportFragmentManager.beginTransaction()
             .replace(binding.fragmentContainerViewMain.id, SignUpFragment())
@@ -60,17 +56,41 @@ class MainActivity : AppCompatActivity(), LoginFragment.ILogin, SignUpFragment.I
         supportFragmentManager.popBackStack();
     }
 
+    override fun login(email: String, password: String) {
+
+        // Sign in with Firebase Auth
+        mAuth.signInWithEmailAndPassword(email, password)
+            .addOnSuccessListener {
+
+                goToHome(mAuth.currentUser!!.uid);
+
+            }
+            .addOnFailureListener { createAlert("Login Error", it.message.toString()) }
+
+    }
+
     override fun createAccount(username: String, email: String, password: String) {
 
+        // Register new account in Firebase auth
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener {
 
-                Log.d(TAG, "createAccount: $it")
+                val id = mAuth.currentUser!!.uid;
+
+                // Save new account in Firestore db
+                db.collection("users").document(id)
+                    .set(hashMapOf(
+                        "username" to username,
+                        "email" to email,
+                        "id" to id
+                    ))
+                    .addOnSuccessListener {
+                        goToHome(id);
+                    }
+                    .addOnFailureListener { createAlert("Sign Up Error", it.message.toString()) }
 
             }
-            .addOnFailureListener {
-                createAlert("Sign Up Error", it.message.toString());
-            }
+            .addOnFailureListener { createAlert("Sign Up Error", it.message.toString()); }
 
     }
 
@@ -82,6 +102,23 @@ class MainActivity : AppCompatActivity(), LoginFragment.ILogin, SignUpFragment.I
             .setPositiveButton("Ok", DialogInterface.OnClickListener { dialog, which ->  })
             .create()
             .show();
+    }
+
+     private fun goToHome(userId: String) {
+
+         // Find user in the database
+         db.collection("users").document(userId)
+             .get()
+             .addOnSuccessListener { docSnapShot ->
+
+                 // Convert document snap shot into user object
+                 val user = docSnapShot.toObject(User::class.java);
+
+                 Log.d(TAG, "goToHome: $user");
+
+             }
+             .addOnFailureListener {  }
+
     }
 
 }
