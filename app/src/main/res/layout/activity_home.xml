@@ -5,8 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity"
-    >
+    tools:context=".HomeActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -24,7 +23,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewHome"
+            android:layout_width="match_parent"
+            android:layout_height="650dp"
+            android:layout_marginBottom="8dp"
+            app:cardBackgroundColor="@color/whiteTransparent"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNavigationViewHome"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewMenuHome"
+            android:layout_marginHorizontal="10dp"
+            app:contentPadding="30dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="0dp"
+            />
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationViewHome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -40,6 +56,6 @@
         app:menu="@menu/drawer_home"
         android:id="@+id/navigationViewHome"
         android:layout_gravity="start"
-        />
+        app:headerLayout="@layout/header_drawer_home"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
